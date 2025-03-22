@@ -1,0 +1,1 @@
+![](<images/PAC - Système à ballon séparé/_page_0_Figure_0.jpeg>)

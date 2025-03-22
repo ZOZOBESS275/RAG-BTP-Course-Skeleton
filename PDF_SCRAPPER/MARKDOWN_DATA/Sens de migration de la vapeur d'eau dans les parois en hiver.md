@@ -1,0 +1,1 @@
+![](<images/Sens de migration de la vapeur d'eau dans les parois en hiver/_page_0_Picture_0.jpeg>)

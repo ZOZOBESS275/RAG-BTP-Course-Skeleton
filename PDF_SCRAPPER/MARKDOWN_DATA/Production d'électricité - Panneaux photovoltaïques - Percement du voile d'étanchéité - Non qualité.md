@@ -1,0 +1,1 @@
+![](<images/Production d'électricité - Panneaux photovoltaïques - Percement du voile d'étanchéité - Non qualité/_page_0_Picture_0.jpeg>)

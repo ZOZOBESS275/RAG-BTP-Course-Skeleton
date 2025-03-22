@@ -1,0 +1,1 @@
+![](<images/Procédé d'isolation thermique extérieure par enduit sur polystyrène expansé - 3/_page_0_Picture_0.jpeg>)

@@ -1,0 +1,20 @@
+![](<images/Panneaux solaires thermiques - Non qualité/_page_0_Picture_0.jpeg>)
+
+![](<images/Panneaux solaires thermiques - Non qualité/_page_0_Picture_1.jpeg>)
+
+| Elément technique     | Sous- élément<br>technique | Neuf | Rénovation                                                                                                       | Constat<br>MI | Collectif | Tertiaire |
+|-----------------------|----------------------------|------|------------------------------------------------------------------------------------------------------------------|---------------|-----------|-----------|
+| ECS solaire thermique | Panneaux solaires          |      | Les panneaux solaires thermiques (type capteurs à tube sous<br>vide) sont ombragés tout ou partie de la journée. |               |           |           |
+
+![](<images/Panneaux solaires thermiques - Non qualité/_page_0_Picture_3.jpeg>)
+
+## **Cause technique** Les masques solaires n'ont pas été pris en compte lors de l'étude thermique (pans de toit, autres bâtiments,..) **Origine Conception Exécution Exploitation** Méconnaissance ou négligence de la part des concepteurs, défauts de relevés.
+
+| Solutions correctives<br>et/ou préventives | Changer le positionnement des capteurs afin de limiter fortement les masques.                                                                                                                                                                                                                                                                                                                                                                     |
+|--------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|                                            |                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+|                                            | Recommandations professionnelles RAGE :<br>chauffe-eau solaire en habitat individuel -<br>conception et dimensionnement - &5.1.3 - juillet 2013.                                                                                                                                                                                                                                                                                                  |
+| Règles de l'art                            | -<br>Une bonne orientation et une bonne inclinaison ne suffisent pas à garantir un<br>ensoleillement optimal. Il convient de vérifier que les obstacles proches ou lointains (arbres,<br>bâtiments) ne viennent pas porter d'ombres pénalisant l'ensoleillement reçu sur les<br>capteurs.<br>- Le repérage de la présence d'obstacles éventuels implique de réaliser un relevé de masque<br>afin d'en mesurer la portée sur le champ de capteurs. |
+|                                            | L'emplacement choisi doit permettre un ensoleillement optimal. Trois facteurs sont à<br>prendre en compte : l'inclinaison, l'orientation, la présence de masques proches et lointains<br>éventuels (ombres portées sur les capteurs) (&5.1).                                                                                                                                                                                                      |
+
+![](<images/Panneaux solaires thermiques - Non qualité/_page_0_Picture_8.jpeg>)
