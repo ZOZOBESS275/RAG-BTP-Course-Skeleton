@@ -1,5 +1,6 @@
 // Suppression totale du graphe existant (à exécuter une seule fois avant si nécessaire)
-MATCH (n) DETACH DELETE n;
+MATCH (n) DETACH DELETE n; 
+// To-Do : add more nodes
 
 // Création des nœuds (thématiques, concepts techniques, réglementations, acteurs)
 MERGE (plomberie:Theme {name: "Plomberie"})
