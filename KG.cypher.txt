@@ -1,0 +1,81 @@
+// Suppression totale du graphe existant (à exécuter une seule fois avant si nécessaire)
+MATCH (n) DETACH DELETE n; 
+// To-Do : add more nodes
+
+// Création des nœuds (thématiques, concepts techniques, réglementations, acteurs)
+MERGE (plomberie:Theme {name: "Plomberie"})
+MERGE (isolation:Theme {name: "Isolation thermique"})
+MERGE (ventilation:Theme {name: "Ventilation"})
+MERGE (chauffage:Theme {name: "Chauffage"})
+MERGE (electricite:Theme {name: "Électricité"})
+MERGE (renouvelable:Theme {name: "Énergie renouvelable"})
+MERGE (materiauxEco:Theme {name: "Matériaux écologiques"})
+MERGE (etancheite:Theme {name: "Étanchéité à l’air"})
+MERGE (reglementations:Theme {name: "Réglementations"})
+MERGE (eau:Theme {name: "Gestion de l’eau"})
+
+MERGE (pompe:Concept {name: "Pompe à chaleur"})
+MERGE (vmc:Concept {name: "VMC double flux"})
+MERGE (ouate:Concept {name: "Ouate de cellulose"})
+MERGE (chanvre:Concept {name: "Isolant en chanvre"})
+MERGE (thermo:Concept {name: "Chauffe-eau thermodynamique"})
+MERGE (plancher:Concept {name: "Plancher chauffant"})
+MERGE (led:Concept {name: "Éclairage LED"})
+MERGE (pv:Concept {name: "Panneau solaire photovoltaïque"})
+MERGE (membrane:Concept {name: "Membrane d'étanchéité"})
+MERGE (recup:Concept {name: "Récupérateur d'eau de pluie"})
+MERGE (solaire:Concept {name: "Énergie solaire"})
+
+MERGE (re2020:Norme {name: "RE2020"})
+MERGE (rt2012:Norme {name: "RT2012"})
+MERGE (hqe:Norme {name: "HQE"})
+
+MERGE (artisan:Acteur {name: "Artisan"})
+MERGE (bureau:Acteur {name: "Bureau d'étude"})
+MERGE (pro:Acteur {name: "Professionnel"})
+
+// Relations APPARTIENT_A_CATEGORIE
+MERGE (pompe)-[:APPARTIENT_A_CATEGORIE]->(chauffage)
+MERGE (vmc)-[:APPARTIENT_A_CATEGORIE]->(ventilation)
+MERGE (ouate)-[:APPARTIENT_A_CATEGORIE]->(isolation)
+MERGE (chanvre)-[:APPARTIENT_A_CATEGORIE]->(materiauxEco)
+MERGE (thermo)-[:APPARTIENT_A_CATEGORIE]->(plomberie)
+MERGE (plancher)-[:APPARTIENT_A_CATEGORIE]->(chauffage)
+MERGE (led)-[:APPARTIENT_A_CATEGORIE]->(electricite)
+MERGE (pv)-[:APPARTIENT_A_CATEGORIE]->(renouvelable)
+MERGE (membrane)-[:APPARTIENT_A_CATEGORIE]->(etancheite)
+MERGE (recup)-[:APPARTIENT_A_CATEGORIE]->(eau)
+MERGE (re2020)-[:APPARTIENT_A_CATEGORIE]->(reglementations)
+MERGE (rt2012)-[:APPARTIENT_A_CATEGORIE]->(reglementations)
+MERGE (hqe)-[:APPARTIENT_A_CATEGORIE]->(reglementations)
+
+// Relations EST_ASSOCIE_A
+MERGE (isolation)-[:EST_ASSOCIE_A]->(ventilation)
+MERGE (isolation)-[:EST_ASSOCIE_A]->(etancheite)
+MERGE (ventilation)-[:EST_ASSOCIE_A]->(etancheite)
+MERGE (plomberie)-[:EST_ASSOCIE_A]->(eau)
+MERGE (chauffage)-[:EST_ASSOCIE_A]->(isolation)
+MERGE (renouvelable)-[:EST_ASSOCIE_A]->(hqe)
+MERGE (materiauxEco)-[:EST_ASSOCIE_A]->(hqe)
+MERGE (pompe)-[:EST_ASSOCIE_A]->(renouvelable)
+MERGE (thermo)-[:EST_ASSOCIE_A]->(renouvelable)
+MERGE (ouate)-[:EST_ASSOCIE_A]->(materiauxEco)
+MERGE (chanvre)-[:EST_ASSOCIE_A]->(isolation)
+MERGE (vmc)-[:EST_ASSOCIE_A]->(isolation)
+MERGE (artisan)-[:EST_ASSOCIE_A]->(plomberie)
+MERGE (bureau)-[:EST_ASSOCIE_A]->(reglementations)
+MERGE (pro)-[:EST_ASSOCIE_A]->(hqe)
+
+// Relations UTILISE_TECHNOLOGIE
+MERGE (thermo)-[:UTILISE_TECHNOLOGIE]->(pompe)
+MERGE (pv)-[:UTILISE_TECHNOLOGIE]->(solaire)
+
+// Relations CONFORME_A_NORME
+MERGE (thermo)-[:CONFORME_A_NORME]->(rt2012)
+MERGE (pompe)-[:CONFORME_A_NORME]->(re2020)
+MERGE (ouate)-[:CONFORME_A_NORME]->(hqe)
+
+// Relations COMPATIBLE_AVEC
+MERGE (pompe)-[:COMPATIBLE_AVEC]->(plancher)
+MERGE (vmc)-[:COMPATIBLE_AVEC]->(etancheite)
+MERGE (pv)-[:COMPATIBLE_AVEC]->(thermo)

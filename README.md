@@ -1,59 +1,51 @@
 # RAG-BTP-Course-Skeleton
 
-# Projet RAG Intégré pour l'Extraction et la Génération de Réponses
+# 🚀 Projet RAG Intégré pour l'Extraction et la Génération de Réponses
 
-Ce projet vise à développer une solution complète de RAG (Retrieval Augmented Generation) en combinant plusieurs technologies afin d'extraire, traiter et exploiter des informations issues de documents PDF pour générer des réponses contextuelles à des requêtes utilisateur.
+Ce projet propose une chaîne intelligente de traitement documentaire pour extraire, structurer et utiliser efficacement des informations à partir de fichiers PDF, dans une optique de **génération augmentée par la recherche** (*Retrieval Augmented Generation*, ou **RAG**). Il combine des technologies modernes de scraping, NLP, graphes et LLM pour offrir une expérience de question-réponse riche et contextuelle.
 
-## Description du Processus
+---
 
-## 🛠 Installation & Setup
+## 🔍 Vue d'ensemble du Pipeline
 
-### 1. Create `config.ini`
+### 1. 🔗 Extraction des Documents
+Les fichiers PDF sont récupérés depuis le site *dispositif-rexbp* grâce à une combinaison de **BeautifulSoup** (scraping statique HTML) et **Selenium** (navigation dynamique). Ce duo permet de simuler un utilisateur humain : cliquer sur les boutons, attendre le chargement de la page, et collecter automatiquement les documents ainsi que leurs métadonnées (titre, date, source, etc.).
 
-```ini
-[paths]
-metadata = "the path to json files ( the output of the scrappers)"
-pdfs = "the path to pdf files downloaded by the scrappers"
-markdowns = "the path to the output dir"
-data = "path where the ConceptNet RDF data will be stored"
+### 2. 🔮 Conversion PDF → Markdown
+Les PDF sont ensuite convertis en fichiers Markdown via **PDFConverter**, un OCR intelligent. Il interprète chaque page comme une image, extrait le texte tout en respectant la mise en forme originale (titres, tableaux, listes, etc.), puis génère un Markdown propre, lisible et structurant le contenu de façon logique. Idéal pour l'analyse sémantique ultérieure !
 
-[links]
-conceptnet_assertions = https://s3.amazonaws.com/conceptnet/downloads/2019/edges/conceptnet-assertions-5.7.0.csv.gz
+### 3. 📄 Nettoyage et Prétraitement des Fichiers
+Les fichiers Markdown bruts sont "purifiés" via des expressions régulières (**re**). On supprime les balises HTML, les sauts de lignes multiples, les caractères parasites. Ensuite, on applique **stemming** et **lemmatisation** pour ramener les mots à leur forme de base, préparant ainsi un terrain neutre pour les prochaines étapes d'analyse.
 
-[qdrant_server]
-qdrant_url = http://localhost:6333
-dataset = conceptnet
-```
+### 4. 🔎 Extraction Intelligente de Mots-clés
+C'est ici que **KeyBERT** entre en jeu. Basé sur **BERT**, ce modèle calcule des embeddings sémantiques du texte complet et de ses sous-parties, puis mesure leur similarité pour extraire les expressions-clés les plus significatives. Pas besoin d'entraînement, c'est du **zero-shot keyword extraction**, puissant et adaptatif.
 
+### 5. 📊 Construction du Graphe de Connaissances
+Les mots-clés sont transformés en nœuds et reliés par des relations pertinentes dans un graphe créé avec **Neo4j**. Ce graphe devient une représentation dynamique des concepts, permettant de naviguer dans les connaissances, de visualiser les liens entre idées, et de retrouver des informations connexes de façon fluide.
 
-1. **Extraction des Documents :**  
-   Les documents sont extraits depuis le site *dispositif-rexbp* à l'aide de BeautifulSoup et Selenium.
+### 6. 📐 Indexation Vectorielle des Segments
+Chaque document Markdown est découpé intelligemment en "chunks" via **Langchain**, pour conserver la cohérence sémantique dans chaque bloc. Ces chunks sont vectorisés à l'aide de **SentenceTransformers**, produisant des embeddings puissants. Enfin, ces vecteurs sont stockés dans **Qdrant**, une base de données vectorielle performante, prête à répondre aux requêtes par similarité.
 
-2. **Conversion des PDF en Markdown :**  
-   Un OCR nommé **PDFConverter** est utilisé pour transformer les fichiers PDF en fichiers Markdown.  
-   *PDFConverter est un outil performant qui convertit efficacement le contenu des PDF en texte structuré au format Markdown.*
+### 7. 🧠 Génération Contextuelle de Réponses
+Quand un utilisateur pose une question, celle-ci est vectorisée pour en extraire les concepts clés. Ces concepts sont utilisés pour :  
+1. Interroger **Neo4j** (pour récupérer les nœuds/concepts liés),  
+2. Interroger **Qdrant** (pour trouver les chunks les plus proches sémantiquement).
 
-3. **Prétraitement des Fichiers Markdown :**  
-   Les fichiers Markdown obtenus subissent un prétraitement consistant à supprimer les balises et à nettoyer le texte. Ce texte est ensuite normalisé grâce à des opérations de stemming et de lemmatisation, afin de préparer les données pour l'analyse ultérieure.
+Les résultats combinés servent de contexte au modèle de langage **LLama3.2**, exécuté localement, qui génère alors une réponse précise, contextuelle, et enrichie par les données réelles.
 
-4. **Extraction des Mots-clés :**  
-   Le texte prétraité est analysé par **KeyBERT** pour extraire des mots-clés pertinents pour chaque document. Ces mots-clés représentent les éléments essentiels du contenu et servent de base à la structuration des connaissances.
+---
 
-5. **Création du Graphe de Connaissances :**  
-   Les mots-clés extraits sont utilisés pour construire un graphe de connaissances à l'aide de **Neo4j**. Ce graphe permet d'organiser et de relier les informations selon des thématiques pertinentes.
-
-6. **Indexation Vectorielle des Chunks Markdown :**  
-   Les fichiers Markdown sont découpés en segments (chunks) et transformés en vecteurs grâce à un modèle SentenceTransformer. Ces vecteurs sont ensuite stockés dans une base de données vectorielle construite avec **Qdrant**.
-
-7. **Génération de Réponses :**  
-   En combinant les informations du graphe de connaissances et de la base de données vectorielle, le système extrait les données nécessaires pour répondre aux prompts utilisateur. Ces données sont finalement transmises à **LLama3.2**, qui génère la réponse finale.
-
-## Technologies Utilisées
+## 🛠 Technologies Utilisées
 
 - **Extraction Web :** BeautifulSoup, Selenium  
-- **Conversion OCR :** PDFConverter  
-- **Prétraitement de Texte :** Stemming et Lemmatisation  
-- **Extraction de Mots-clés :** KeyBERT  
-- **Graph Database :** Neo4j  
-- **Indexation Vectorielle :** Qdrant  
-- **Modèle de Génération de Réponses :** LLama3.2
+- **OCR / Parsing PDF :** PDFConverter  
+- **Nettoyage Texte :** re, NLTK (Stemming, Lemmatisation)  
+- **Mots-clés :** KeyBERT (basé sur BERT)  
+- **Graphe de Connaissances :** Neo4j  
+- **Vectorisation :** Langchain, SentenceTransformers  
+- **Base Vectorielle :** Qdrant  
+- **Modèle LLM :** LLama3.2 (exécuté localement)
+
+---
+
+Ce pipeline incarne une synergie moderne entre extraction, structuration et génération de connaissance. Il s'agit d'un projet modulaire, évolutif et réplicable dans plusieurs contextes industriels ou académiques. ✨
