@@ -1,5 +1,6 @@
 # RAG-BTP-Course-Skeleton
 
+
 # 🚀 Projet RAG Intégré pour l'Extraction et la Génération de Réponses
 
 Ce projet propose une chaîne intelligente de traitement documentaire pour extraire, structurer et utiliser efficacement des informations à partir de fichiers PDF, dans une optique de **génération augmentée par la recherche** (*Retrieval Augmented Generation*, ou **RAG**). Il combine des technologies modernes de scraping, NLP, graphes et LLM pour offrir une expérience de question-réponse riche et contextuelle.
