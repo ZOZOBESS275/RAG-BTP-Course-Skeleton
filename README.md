@@ -18,16 +18,13 @@ Les PDF sont ensuite convertis en fichiers Markdown via **PDFConverter**, un OCR
 ### 3. 📄 Nettoyage et Prétraitement des Fichiers
 Les fichiers Markdown bruts sont "purifiés" via des expressions régulières (**re**). On supprime les balises HTML, les sauts de lignes multiples, les caractères parasites. Ensuite, on applique **stemming** et **lemmatisation** pour ramener les mots à leur forme de base, préparant ainsi un terrain neutre pour les prochaines étapes d'analyse.
 
-### 4. 🔎 Extraction Intelligente de Mots-clés
-C'est ici que **KeyBERT** entre en jeu. Basé sur **BERT**, ce modèle calcule des embeddings sémantiques du texte complet et de ses sous-parties, puis mesure leur similarité pour extraire les expressions-clés les plus significatives. Pas besoin d'entraînement, c'est du **zero-shot keyword extraction**, puissant et adaptatif.
+### 4. 📊 Construction du Graphe de Connaissances
+Traditionnellement, cette étape nécessite l’intervention d’un expert métier pour structurer manuellement les relations entre concepts. Cependant, dans ce projet, nous avons utilisé le modèle ChatGPT-O1 comme substitut d’expert afin de générer automatiquement le graphe de connaissances. En analysant le contenu nettoyé des documents, ChatGPT-O1 a été capable d’identifier les entités clés et de construire un réseau sémantique cohérent et pertinent. Cette méthode s’est révélée efficace et a permis d’obtenir un graphe exploitable avec de très bons résultats. Le graphe est ensuite formalisé dans Neo4j, où chaque concept devient un nœud, relié à d’autres par des relations thématiques ou logiques.
 
-### 5. 📊 Construction du Graphe de Connaissances
-Les mots-clés sont transformés en nœuds et reliés par des relations pertinentes dans un graphe créé avec **Neo4j**. Ce graphe devient une représentation dynamique des concepts, permettant de naviguer dans les connaissances, de visualiser les liens entre idées, et de retrouver des informations connexes de façon fluide.
-
-### 6. 📐 Indexation Vectorielle des Segments
+### 5. 📐 Indexation Vectorielle des Segments
 Chaque document Markdown est découpé intelligemment en "chunks" via **Langchain**, pour conserver la cohérence sémantique dans chaque bloc. Ces chunks sont vectorisés à l'aide de **SentenceTransformers**, produisant des embeddings puissants. Enfin, ces vecteurs sont stockés dans **Qdrant**, une base de données vectorielle performante, prête à répondre aux requêtes par similarité.
 
-### 7. 🧠 Génération Contextuelle de Réponses
+### 6. 🧠 Génération Contextuelle de Réponses
 Quand un utilisateur pose une question, celle-ci est vectorisée pour en extraire les concepts clés. Ces concepts sont utilisés pour :  
 1. Interroger **Neo4j** (pour récupérer les nœuds/concepts liés),  
 2. Interroger **Qdrant** (pour trouver les chunks les plus proches sémantiquement).

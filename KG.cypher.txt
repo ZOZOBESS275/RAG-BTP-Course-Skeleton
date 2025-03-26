@@ -1,8 +1,13 @@
-// Suppression totale du graphe existant (à exécuter une seule fois avant si nécessaire)
-MATCH (n) DETACH DELETE n; 
-// To-Do : add more nodes
+//////////////////////////////////////////////////////////////////////
+// SUPPRESSION TOTALE DU GRAPHE EXISTANT
+// (à exécuter UNE SEULE FOIS avant, si nécessaire pour tout remettre à zéro)
+//////////////////////////////////////////////////////////////////////
+MATCH (n) DETACH DELETE n;
 
-// Création des nœuds (thématiques, concepts techniques, réglementations, acteurs)
+
+//////////////////////////////////////////////////////////////////////
+// CREATION DES THEMES INITIAUX
+//////////////////////////////////////////////////////////////////////
 MERGE (plomberie:Theme {name: "Plomberie"})
 MERGE (isolation:Theme {name: "Isolation thermique"})
 MERGE (ventilation:Theme {name: "Ventilation"})
@@ -14,6 +19,25 @@ MERGE (etancheite:Theme {name: "Étanchéité à l’air"})
 MERGE (reglementations:Theme {name: "Réglementations"})
 MERGE (eau:Theme {name: "Gestion de l’eau"})
 
+
+//////////////////////////////////////////////////////////////////////
+// NOUVELLES THÉMATIQUES AJOUTÉES
+//////////////////////////////////////////////////////////////////////
+MERGE (org:Theme {name: "Aspects organisationnels"})
+MERGE (clim:Theme {name: "Chauffage et refroidissement"})
+MERGE (ecs:Theme {name: "Eau chaude sanitaire"})
+MERGE (elecSpec:Theme {name: "Éclairage et électricité spécifique"})
+MERGE (opaques:Theme {name: "Parois opaques"})
+MERGE (vitrees:Theme {name: "Parois vitrées"})
+MERGE (pilotage:Theme {name: "Pilotage"})
+MERGE (prodElec:Theme {name: "Production d'électricité"})
+MERGE (domotique:Theme {name: "Domotique"})
+MERGE (chantier:Theme {name: "Chantier propre"})
+
+
+//////////////////////////////////////////////////////////////////////
+// CREATION DES CONCEPTS INITIAUX
+//////////////////////////////////////////////////////////////////////
 MERGE (pompe:Concept {name: "Pompe à chaleur"})
 MERGE (vmc:Concept {name: "VMC double flux"})
 MERGE (ouate:Concept {name: "Ouate de cellulose"})
@@ -26,15 +50,47 @@ MERGE (membrane:Concept {name: "Membrane d'étanchéité"})
 MERGE (recup:Concept {name: "Récupérateur d'eau de pluie"})
 MERGE (solaire:Concept {name: "Énergie solaire"})
 
+
+//////////////////////////////////////////////////////////////////////
+// NOUVEAUX CONCEPTS AJOUTÉS
+//////////////////////////////////////////////////////////////////////
+MERGE (coffret:Concept {name: "Coffret domotique"})
+MERGE (borne:Concept {name: "Borne de recharge électrique"})
+
+
+//////////////////////////////////////////////////////////////////////
+// CREATION DES NORMES INITIALES
+//////////////////////////////////////////////////////////////////////
 MERGE (re2020:Norme {name: "RE2020"})
 MERGE (rt2012:Norme {name: "RT2012"})
 MERGE (hqe:Norme {name: "HQE"})
 
+
+//////////////////////////////////////////////////////////////////////
+// NOUVELLES NORMES AJOUTÉES
+//////////////////////////////////////////////////////////////////////
+MERGE (iso9001:Norme {name: "ISO 9001"})
+
+
+//////////////////////////////////////////////////////////////////////
+// CREATION DES ACTEURS INITIAUX
+//////////////////////////////////////////////////////////////////////
 MERGE (artisan:Acteur {name: "Artisan"})
 MERGE (bureau:Acteur {name: "Bureau d'étude"})
 MERGE (pro:Acteur {name: "Professionnel"})
 
-// Relations APPARTIENT_A_CATEGORIE
+
+//////////////////////////////////////////////////////////////////////
+// NOUVEAUX ACTEURS ÉVENTUELS (EXEMPLE)
+//////////////////////////////////////////////////////////////////////
+// (Décommenter ou adapter selon besoin)
+// MERGE (ecoArchitect:Acteur {name: "Éco-architecte"})
+// MERGE (maitreOuvrage:Acteur {name: "Maître d'ouvrage"})
+
+
+//////////////////////////////////////////////////////////////////////
+// RELATIONS : APPARTIENT_A_CATEGORIE
+//////////////////////////////////////////////////////////////////////
 MERGE (pompe)-[:APPARTIENT_A_CATEGORIE]->(chauffage)
 MERGE (vmc)-[:APPARTIENT_A_CATEGORIE]->(ventilation)
 MERGE (ouate)-[:APPARTIENT_A_CATEGORIE]->(isolation)
@@ -49,7 +105,16 @@ MERGE (re2020)-[:APPARTIENT_A_CATEGORIE]->(reglementations)
 MERGE (rt2012)-[:APPARTIENT_A_CATEGORIE]->(reglementations)
 MERGE (hqe)-[:APPARTIENT_A_CATEGORIE]->(reglementations)
 
-// Relations EST_ASSOCIE_A
+// On rattache aussi nos deux nouveaux concepts à des catégories logiques
+MERGE (coffret)-[:APPARTIENT_A_CATEGORIE]->(domotique)
+MERGE (borne)-[:APPARTIENT_A_CATEGORIE]->(electricite)
+
+
+//////////////////////////////////////////////////////////////////////
+// RELATIONS : EST_ASSOCIE_A (LIENS SEMANTIQUES)
+//////////////////////////////////////////////////////////////////////
+
+// V1 initiales
 MERGE (isolation)-[:EST_ASSOCIE_A]->(ventilation)
 MERGE (isolation)-[:EST_ASSOCIE_A]->(etancheite)
 MERGE (ventilation)-[:EST_ASSOCIE_A]->(etancheite)
@@ -66,16 +131,45 @@ MERGE (artisan)-[:EST_ASSOCIE_A]->(plomberie)
 MERGE (bureau)-[:EST_ASSOCIE_A]->(reglementations)
 MERGE (pro)-[:EST_ASSOCIE_A]->(hqe)
 
-// Relations UTILISE_TECHNOLOGIE
+// Nouvelles associations entre thématiques
+MERGE (clim)-[:EST_ASSOCIE_A]->(ventilation)
+MERGE (ecs)-[:EST_ASSOCIE_A]->(plomberie)
+MERGE (elecSpec)-[:EST_ASSOCIE_A]->(electricite)
+MERGE (opaques)-[:EST_ASSOCIE_A]->(isolation)
+MERGE (vitrees)-[:EST_ASSOCIE_A]->(isolation)
+MERGE (pilotage)-[:EST_ASSOCIE_A]->(domotique)
+MERGE (prodElec)-[:EST_ASSOCIE_A]->(renouvelable)
+MERGE (org)-[:EST_ASSOCIE_A]->(chantier)
+
+// Nouvelles associations avec des concepts
+MERGE (pompe)-[:EST_ASSOCIE_A]->(clim)
+MERGE (coffret)-[:EST_ASSOCIE_A]->(pilotage)
+MERGE (borne)-[:EST_ASSOCIE_A]->(prodElec)
+
+// Lien vers la nouvelle norme
+MERGE (org)-[:EST_ASSOCIE_A]->(iso9001)
+
+
+//////////////////////////////////////////////////////////////////////
+// RELATIONS : UTILISE_TECHNOLOGIE
+//////////////////////////////////////////////////////////////////////
 MERGE (thermo)-[:UTILISE_TECHNOLOGIE]->(pompe)
 MERGE (pv)-[:UTILISE_TECHNOLOGIE]->(solaire)
 
-// Relations CONFORME_A_NORME
+
+//////////////////////////////////////////////////////////////////////
+// RELATIONS : CONFORME_A_NORME
+//////////////////////////////////////////////////////////////////////
 MERGE (thermo)-[:CONFORME_A_NORME]->(rt2012)
 MERGE (pompe)-[:CONFORME_A_NORME]->(re2020)
 MERGE (ouate)-[:CONFORME_A_NORME]->(hqe)
+// Nouvelles conformités
+MERGE (pompe)-[:CONFORME_A_NORME]->(iso9001)
 
-// Relations COMPATIBLE_AVEC
+
+//////////////////////////////////////////////////////////////////////
+// RELATIONS : COMPATIBLE_AVEC
+//////////////////////////////////////////////////////////////////////
 MERGE (pompe)-[:COMPATIBLE_AVEC]->(plancher)
 MERGE (vmc)-[:COMPATIBLE_AVEC]->(etancheite)
 MERGE (pv)-[:COMPATIBLE_AVEC]->(thermo)
